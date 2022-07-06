@@ -1,4 +1,10 @@
 version: 0.2
+env:
+  variables:
+    EB_APP: "CFT-deploy-from-cli"
+    S3_BUCK: "the-build-artifacts"
+    EB_APP_LABEL: "6e3d08599c97897e39014cdccf1d9fe8601bc639"
+    S3_KEY: "something-6e3d08599c97897e39014cdccf1d9fe8601bc639.war"
 
 phases:
   # install:
@@ -10,9 +16,14 @@ phases:
   #     - cp ci/maven/settings.xml /root/.m2/settings.xml
   build:
     commands:
-      - echo Entered the build phase...
       # Add new EB application
+      - echo Entered the build phase...
+      - echo artifact is here- $artifactS3Key
+      - aws elasticbeanstalk create-application-version --application-name "$EB_APP" --version-label "$EB_APP_LABEL" --source-bundle S3Bucket="$S3_BUCK",S3Key="S3_KEY""
+      
       # Change gitops repo to new version
+      git clone https://github.com/jzaccone/spring-hello-world
+
   post_build:
     commands:
       - echo Build completed on `date`
