@@ -15,6 +15,10 @@ phases:
   #   commands:
   #     - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain uzurv --domain-owner 371707344195 --query authorizationToken --output text`
   #     - cp ci/maven/settings.xml /root/.m2/settings.xml
+  pre_build:
+    commands:
+      - ls -lt
+      - cat pom.xml
   build:
     commands:
       # Add new EB application
@@ -23,8 +27,8 @@ phases:
       # - aws elasticbeanstalk create-application-version --application-name "$EB_APP" --version-label "$EB_APP_LABEL" --source-bundle S3Bucket="$S3_BUCK",S3Key="S3_KEY""
 
       # Change gitops repo to new version
-      - git status
       - ls
+      - git status
 
       # - git config --global user.email "john.zaccone@gmail.com"
       # - git config --global user.name "John Zaccone"

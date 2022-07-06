@@ -36,5 +36,6 @@ Resources:
               - Action:
                   - "s3:*"
                   - "logs:*"
+                  - "codestar-connections:UseConnection"
                 Effect: Allow
                 Resource: "*"
