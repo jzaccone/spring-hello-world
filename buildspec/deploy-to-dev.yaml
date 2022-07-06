@@ -23,6 +23,11 @@ phases:
 
       # Change gitops repo to new version
       - git clone https://github.com/jzaccone/spring-hello-world
+      - cd spring-hello-world
+      - echo "hello world" > newfile.txt
+      - git add .
+      - git commit -m "testing push from codebuild"
+      - git push
 
   post_build:
     commands:
