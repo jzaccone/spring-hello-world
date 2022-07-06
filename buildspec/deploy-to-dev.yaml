@@ -20,9 +20,9 @@ phases:
       - echo Entered the build phase...
       - echo artifact is here- $artifactS3Key
       - aws elasticbeanstalk create-application-version --application-name "$EB_APP" --version-label "$EB_APP_LABEL" --source-bundle S3Bucket="$S3_BUCK",S3Key="S3_KEY""
-      
+
       # Change gitops repo to new version
-      git clone https://github.com/jzaccone/spring-hello-world
+      - git clone https://github.com/jzaccone/spring-hello-world
 
   post_build:
     commands:
