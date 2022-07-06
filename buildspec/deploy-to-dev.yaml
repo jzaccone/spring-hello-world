@@ -22,6 +22,8 @@ phases:
       # - aws elasticbeanstalk create-application-version --application-name "$EB_APP" --version-label "$EB_APP_LABEL" --source-bundle S3Bucket="$S3_BUCK",S3Key="S3_KEY""
 
       # Change gitops repo to new version
+      - git config --global user.email "john.zaccone@gmail.com"
+      - git config --global user.name "John Zaccone"
       - git clone https://github.com/jzaccone/spring-hello-world
       - cd spring-hello-world
       - echo "hello world" > newfile.txt
