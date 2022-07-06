@@ -1,7 +1,7 @@
 version: 0.2
 env:
   variables:
-    BATCH_WAR: "target/demo-0.0.1-SNAPSHOT.war"
+    WAR_FILE: "target/demo-0.0.1-SNAPSHOT.war"
 phases:
   pre_build:
     commands:
@@ -15,6 +15,6 @@ phases:
       - echo Build completed on `date`
       - echo uploading new application to EB and deploying
 artifacts:
-  name: WAR_FILE
+  name: WarFile
   files:
     - $WAR_FILE
