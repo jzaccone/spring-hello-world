@@ -22,14 +22,17 @@ phases:
       # - aws elasticbeanstalk create-application-version --application-name "$EB_APP" --version-label "$EB_APP_LABEL" --source-bundle S3Bucket="$S3_BUCK",S3Key="S3_KEY""
 
       # Change gitops repo to new version
-      - git config --global user.email "john.zaccone@gmail.com"
-      - git config --global user.name "John Zaccone"
-      - git clone git@github.com:jzaccone/spring-hello-world.git
-      - cd spring-hello-world
-      - echo "hello world" > newfile.txt
-      - git add .
-      - git commit -m "testing push from codebuild"
-      - git push
+      - git status
+      - ls
+
+      # - git config --global user.email "john.zaccone@gmail.com"
+      # - git config --global user.name "John Zaccone"
+      # - git clone git@github.com:jzaccone/spring-hello-world.git
+      # - cd spring-hello-world
+      # - echo "hello world" > newfile.txt
+      # - git add .
+      # - git commit -m "testing push from codebuild"
+      # - git push
 
   post_build:
     commands:
