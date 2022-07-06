@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  # install:
+  #   runtime-versions:
+  #     docker: 18
+  #     java: corretto8
+  #   commands:
+  #     - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain uzurv --domain-owner 371707344195 --query authorizationToken --output text`
+  #     - cp ci/maven/settings.xml /root/.m2/settings.xml
+  build:
+    commands:
+      - echo Entered the build phase...
+      # Add new EB application
+      # Change gitops repo to new version
+  post_build:
+    commands:
+      - echo Build completed on `date`

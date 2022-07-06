@@ -1,0 +1,20 @@
+version: 0.2
+env:
+  variables:
+    BATCH_WAR: "target/demo-0.0.1-SNAPSHOT.war"
+phases:
+  pre_build:
+    commands:
+      - echo Hola!
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean package
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo uploading new application to EB and deploying
+artifacts:
+  name: WAR_FILE
+  files:
+    - $WAR_FILE
