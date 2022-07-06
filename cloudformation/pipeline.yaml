@@ -54,7 +54,7 @@ Resources:
       Stages:
         - Name: "Source"
           Actions:
-            - Name: "TemplateSource"
+            - Name: "AppCodeSource"
               ActionTypeId:
                 Category: "Source"
                 Owner: "AWS"
@@ -67,6 +67,22 @@ Resources:
                 OutputArtifactFormat: "CODEBUILD_CLONE_REF"
               OutputArtifacts:
                 - Name: "SourceArtifact"
+              Region: !Ref AWS::Region
+              Namespace: "SourceVariables"
+              RunOrder: 1
+            - Name: "GitOpsSource"
+              ActionTypeId:
+                Category: "Source"
+                Owner: "AWS"
+                Provider: "CodeStarSourceConnection"
+                Version: "1"
+              Configuration:
+                BranchName: "main"
+                ConnectionArn: !Sub "arn:aws:codestar-connections:${AWS::Region}:${AWS::AccountId}:connection/fd93dc2b-3ec1-4a99-99bf-9cba4d26159d"
+                FullRepositoryId: "jzaccone/elastic-beanstalk-gitops"
+                OutputArtifactFormat: "CODEBUILD_CLONE_REF"
+              OutputArtifacts:
+                - Name: "GitopsSourceArtifact"
               Region: !Ref AWS::Region
               Namespace: "SourceVariables"
               RunOrder: 1
@@ -105,7 +121,7 @@ Resources:
           Actions:
             - Name: "deploy-app"
               InputArtifacts:
-                - Name: SourceArtifact
+                - Name: GitopsSourceArtifact
               ActionTypeId:
                 Category: "Build"
                 Owner: "AWS"
