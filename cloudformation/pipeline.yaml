@@ -64,42 +64,60 @@ Resources:
                 BranchName: "main"
                 ConnectionArn: !Sub "arn:aws:codestar-connections:${AWS::Region}:${AWS::AccountId}:connection/fd93dc2b-3ec1-4a99-99bf-9cba4d26159d"
                 FullRepositoryId: "jzaccone/spring-hello-world"
-                OutputArtifactFormat: "CODE_ZIP"
+                OutputArtifactFormat: "CODEBUILD_CLONE_REF"
               OutputArtifacts:
                 - Name: "SourceArtifact"
               Region: !Ref AWS::Region
               Namespace: "SourceVariables"
               RunOrder: 1
-        - Name: "Build"
+        # - Name: "Build"
+        #   Actions:
+        #     - Name: "Build-app"
+        #       ActionTypeId:
+        #         Category: "Build"
+        #         Owner: "AWS"
+        #         Provider: "CodeBuild"
+        #         Version: "1"
+        #       Configuration:
+        #         ProjectName: "build-springboot-helloworld"
+        #       InputArtifacts:
+        #         - Name: "SourceArtifact"
+        #       Region: !Ref AWS::Region
+        #       RunOrder: 1
+        #       OutputArtifacts:
+        #         - Name: WarFile
+        # - Name: "Publish"
+        #   Actions:
+        #     - Name: Publish-App
+        #       ActionTypeId:
+        #         Category: Deploy
+        #         Owner: AWS
+        #         Provider: S3
+        #         Version: "1"
+        #       RunOrder: 2
+        #       Configuration:
+        #         BucketName: the-build-artifacts
+        #         ObjectKey: !Sub springboot-helloworld-#{SourceVariables.CommitId}
+        #         Extract: "false"
+        #       InputArtifacts:
+        #         - Name: WarFile
+        - Name: "Deploy"
           Actions:
-            - Name: "Build-app"
+            - Name: "deploy-app"
+              InputArtifacts:
+                - Name: SourceArtifact
               ActionTypeId:
                 Category: "Build"
                 Owner: "AWS"
                 Provider: "CodeBuild"
                 Version: "1"
               Configuration:
-                ProjectName: "build-springboot-helloworld"
-              InputArtifacts:
-                - Name: "SourceArtifact"
+                ProjectName: "deploy-springboot-to-dev"
+                # EnvironmentVariables: '[{"name":"TEST_VARIABLE","value":"TEST_VALUE","type":"PLAINTEXT"},{"name":"ParamStoreTest","value":"PARAMETER_NAME","type":"PARAMETER_STORE"}]'
+                # EnvironmentVariables: '[{"name": "artifactS3Key", "value": "springboot-helloworld-#{SourceVariables.CommitId}", "type": "string"}]'
               Region: !Ref AWS::Region
-              RunOrder: 1
-              OutputArtifacts:
-                - Name: WarFile
-            - Name: Publish-App
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: S3
-                Version: "1"
-              RunOrder: 2
-              Configuration:
-                BucketName: ci-artifacts
-                Extract: "false"
-                ObjectKey: "snapshot.war"
-              OutputArtifacts: []
-              InputArtifacts:
-                - Name: WarFile
+              RunOrder: 3
+
   PipelineRole:
     Type: AWS::IAM::Role
     Properties:
