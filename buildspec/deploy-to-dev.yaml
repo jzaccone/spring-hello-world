@@ -1,5 +1,6 @@
 version: 0.2
 env:
+  git-credential-helper: yes
   variables:
     EB_APP: "CFT-deploy-from-cli"
     S3_BUCK: "the-build-artifacts"
