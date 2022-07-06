@@ -29,7 +29,7 @@ phases:
       - echo "hello world" > newfile.txt
       - git add .
       - git commit -m "testing push from codebuild"
-      - git push
+      - git push --set-upstream origin main
 
   post_build:
     commands:
