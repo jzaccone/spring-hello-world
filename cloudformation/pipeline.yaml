@@ -128,9 +128,8 @@ Resources:
                 Provider: "CodeBuild"
                 Version: "1"
               Configuration:
+                EnvironmentVariables: '[{"name":"GIT_HASH","value":"#{SourceVariables.CommitId}","type":"PLAINTEXT"}]'
                 ProjectName: "deploy-springboot-to-dev"
-                # EnvironmentVariables: '[{"name":"TEST_VARIABLE","value":"TEST_VALUE","type":"PLAINTEXT"},{"name":"ParamStoreTest","value":"PARAMETER_NAME","type":"PARAMETER_STORE"}]'
-                # EnvironmentVariables: '[{"name": "artifactS3Key", "value": "springboot-helloworld-#{SourceVariables.CommitId}", "type": "string"}]'
               Region: !Ref AWS::Region
               RunOrder: 3
 
