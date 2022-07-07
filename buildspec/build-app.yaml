@@ -13,5 +13,5 @@ phases:
 artifacts:
   name: WarFile
   files:
-    - target/demo-0.0.1-SNAPSHOT.war
+    - target/demo-0.0.1-SNAPSHOT.jar
   discard-paths: yes
