@@ -113,7 +113,7 @@ Resources:
               RunOrder: 2
               Configuration:
                 BucketName: the-build-artifacts
-                ObjectKey: !Sub springboot-#{SourceVariables.CommitId}
+                ObjectKey: !Sub springboot-#{SourceVariables.CommitId}.war
                 Extract: "false"
               InputArtifacts:
                 - Name: WarFile
