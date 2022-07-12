@@ -5,23 +5,57 @@ name: Setup CD for new Branch
 
 on: issues
 
-jobs: 
+jobs:
   newIssueCreated:
     runs-on: ubuntu-latest
     steps:
       - name: Save branch name to file
         run: echo "${{ github.event.issue.body }}" > input.yaml
+
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4.25.3
         id: getbranch
         with:
           # The Command which should be run
           cmd: "yq .BranchName input.yaml"
+
       - name: Print Branch
         run: echo Found branch ${{ steps.getbranch.outputs.result }}
-      - name: Create Branch
-        uses: peterjgrainger/action-create-branch@v2.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Create Branch
+      #   uses: peterjgrainger/action-create-branch@v2.2.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     branch: "${{ steps.getbranch.outputs.result }}"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          branch: '${{ steps.getbranch.outputs.result }}'
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-Role-OKPOFKURRMJ4
+
+      - name: Create pipeline
+        run: |
+          cf create-stack --stack-name spring-boot-pipeline-${{ steps.getbranch.outputs.result }} --template-body file:///Users/johnzaccone/uzurv-code/springdemo/cloudformation/pipeline.yaml  --capabilities CAPABILITY_NAMED_IAM --parameters '[{"ParameterKey": "BranchName", "ParameterValue": "${{ steps.getbranch.outputs.result }}"},{"ParameterKey": "EnvName", "ParameterValue": "${{ steps.getbranch.outputs.result }}"}]'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-UXOQB8VATTKH
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.id }}
+          body: |
+            Created pipeline
+            - Source Branch: ${{ steps.getbranch.outputs.result }}
+            - GitOps Branch: ${{ steps.getbranch.outputs.result }}
+
+      - name: Close Issue
+        uses: peter-evans/close-issue@v2
+        with:
+          issue-number: ${{ github.event.issue.id }}
+          comment: Auto-closing issue
