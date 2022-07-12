@@ -11,6 +11,9 @@ jobs:
     # Map a step output to a job output
     outputs:
       yq_input: "${{ github.event.issue.body }} | yq '.BranchName'"
+    steps:
+    - id: step1
+      run: echo "hello world"
       
   newIssueCreated:
     runs-on: ubuntu-latest
