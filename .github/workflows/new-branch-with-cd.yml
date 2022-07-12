@@ -16,7 +16,7 @@ jobs:
         id: getbranch
         with:
           # The Command which should be run
-          cmd: "yq .BranchName | input.yaml"
+          cmd: "yq .BranchName input.yaml"
       - name: Print Branch
         run: echo Found branch ${{ steps.getbranch.outputs.result }}
       - name: Create Branch
