@@ -16,6 +16,12 @@ jobs:
         id: getbranch
         with:
           # The Command which should be run
-          cmd: "echo 'hello: world' | yq .hello"
+          cmd: "yq .BranchName | input.yaml"
       - name: Print Branch
-        run: echo ${{ steps.getbranch.outputs.result }}
+        run: echo Found branch ${{ steps.getbranch.outputs.result }}
+      - name: Create Branch
+        uses: peterjgrainger/action-create-branch@v2.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: '${{ steps.getbranch.outputs.result }}'
