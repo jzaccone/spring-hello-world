@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Save branch name to file
-        run: echo "${{ github.event.issue.body }} > input.yaml
+        run: echo "${{ github.event.issue.body }}" > input.yaml
       - name: Get branch name using yq
         uses: mikefarah/yq@v4.25.3
         with:
