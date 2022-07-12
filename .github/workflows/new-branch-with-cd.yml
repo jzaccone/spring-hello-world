@@ -18,7 +18,9 @@ jobs:
   newIssueCreated:
     runs-on: ubuntu-latest
     steps:
+      - id: Set file
+        run: echo "${{ github.event.issue.body }} > input.yaml
       - name: Get branch name using yq
         uses: mikefarah/yq@v4.25.3
         with:
-          cmd: ${{ needs.yq-input.outputs.yq_input }}
+          cmd: yq '.BranchName' input.yaml
