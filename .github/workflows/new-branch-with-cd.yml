@@ -1,0 +1,15 @@
+# This workflow checks for new issues using the new CD template
+#
+
+name: Setup CD for new Branch
+
+on: issues
+
+jobs:
+  newIssueCreated:
+    runs-on: ubuntu-latest
+    steps:
+      - name: View issue information
+        run: |
+          echo "Issue title: ${{ github.event.issue.title }}"
+          echo "Issue body: ${{ github.event.issue.body }}"
