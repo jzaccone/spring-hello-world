@@ -18,24 +18,20 @@ AWSTemplateFormatVersion: "2010-09-09"
 #
 # How to update pipelines when you have a pipeline change?
 #
-#
+#cf create-stack --stack-name spring-boot-pipeline-eeeee --template-body file:///Users/johnzaccone/uzurv-code/springdemo/cloudformation/pipeline.yaml  --capabilities CAPABILITY_NAMED_IAM --parameters '[{"ParameterKey": "BranchName", "ParameterValue": "eeeeee"}]'
 
 Description: >
   AWS CloudFormation Sample Template Continuous Delievery: This template
   builds an AWS CodePipeline pipeline that implements a continuous delivery release
   process for AWS CloudFormation stacks.
 
-# Parameters:
-#   PipelineName:
-#     Description: A name for pipeline
-#     Type: String
-# Metadata:
-#   AWS::CloudFormation::Interface:
-#     ParameterGroups:
-#       - Label:
-#           default: "CodePipeline Settings"
-#         Parameters:
-#           - PipelineName
+Parameters:
+  BranchName:
+    Description: Git branch that is used as the source
+    Type: String
+  EnvName:
+    Description: Name of the env folder in the gitops repo
+    Type: String
 Resources:
   ArtifactStoreBucket:
     Type: AWS::S3::Bucket
@@ -49,7 +45,7 @@ Resources:
         Location: !Ref "ArtifactStoreBucket"
         Type: S3
       DisableInboundStageTransitions: []
-      Name: spring-build-and-deploy #!Ref "PipelineName"
+      Name: !Sub spring-build-and-deploy-${BranchName}
       RoleArn: !GetAtt [PipelineRole, Arn]
       Stages:
         - Name: "Source"
@@ -61,7 +57,7 @@ Resources:
                 Provider: "CodeStarSourceConnection"
                 Version: "1"
               Configuration:
-                BranchName: "main"
+                BranchName: !Sub "${BranchName}"
                 ConnectionArn: !Sub "arn:aws:codestar-connections:${AWS::Region}:${AWS::AccountId}:connection/fd93dc2b-3ec1-4a99-99bf-9cba4d26159d"
                 FullRepositoryId: "jzaccone/spring-hello-world"
                 OutputArtifactFormat: "CODEBUILD_CLONE_REF"
@@ -128,7 +124,7 @@ Resources:
                 Provider: "CodeBuild"
                 Version: "1"
               Configuration:
-                EnvironmentVariables: '[{"name":"GIT_HASH","value":"#{SourceVariables.CommitId}","type":"PLAINTEXT"}]'
+                EnvironmentVariables: !Sub '[{"name":"GIT_HASH","value":"#{SourceVariables.CommitId}","type":"PLAINTEXT"},{"name":"EnvName","value":"${EnvName}","type":"PLAINTEXT"}]'
                 ProjectName: "deploy-springboot-to-dev"
               Region: !Ref AWS::Region
               RunOrder: 3
