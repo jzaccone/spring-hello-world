@@ -43,7 +43,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-UXOQB8VATTKH
+          role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-BLOZ4AX6UZ39
 
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v2
