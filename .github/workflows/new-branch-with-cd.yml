@@ -6,13 +6,16 @@ name: Setup CD for new Branch
 on: issues
 
 jobs:
+  yq-input:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      yq_input: "${{ github.event.issue.body }} | yq '.BranchName'"
+      
   newIssueCreated:
     runs-on: ubuntu-latest
     steps:
-      - name: View issue information
-        run: echo "::set-output name=YQ_COMMAND::${{ github.event.issue.body }} | yq '.BranchName'"
-    
       - name: Get branch name using yq
         uses: mikefarah/yq@v4.25.3
         with:
-          cmd: ${{ steps.view-issue-information.outputs.YQ_COMMAND }}
+          cmd: ${{ needs.yq-input.outputs.yq_input }}
