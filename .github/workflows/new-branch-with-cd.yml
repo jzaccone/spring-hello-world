@@ -13,5 +13,8 @@ jobs:
         uses: chrisdickinson/setup-yq@v1.0.0
       - name: Save branch name to file
         run: echo "${{ github.event.issue.body }}" > input.yaml
-      - name: Get branch name
-        run: yq '.BranchName' input.yaml
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4.25.3
+        with:
+          # The Command which should be run
+          cmd: "echo "hello: world" | yq .hello"
