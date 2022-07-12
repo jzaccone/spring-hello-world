@@ -15,4 +15,4 @@ jobs:
         uses: mikefarah/yq@v4.25.3
         with:
           # The Command which should be run
-          cmd: "echo "hello: world" | yq .hello"
+          cmd: "echo 'hello: world' | yq .hello"
