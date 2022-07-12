@@ -11,5 +11,9 @@ jobs:
     steps:
       - name: View issue information
         run: |
-          echo "Issue title: ${{ github.event.issue.title }}"
           echo "Issue body: ${{ github.event.issue.body }}"
+    
+      - name: Get branch name using yq
+        uses: mikefarah/yq@v4.25.3
+        with:
+          cmd: echo ${{ github.event.issue.body }}" | yq '.BranchName'
