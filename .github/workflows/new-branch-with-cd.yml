@@ -9,8 +9,6 @@ jobs:
   newIssueCreated:
     runs-on: ubuntu-latest
     steps:
-      - name: setup-yq
-        uses: chrisdickinson/setup-yq@v1.0.0
       - name: Save branch name to file
         run: echo "${{ github.event.issue.body }}" > input.yaml
       - name: yq - portable yaml processor
