@@ -16,4 +16,4 @@ jobs:
       - name: Get branch name using yq
         uses: mikefarah/yq@v4.25.3
         with:
-          cmd: echo ${{ github.event.issue.body }}" | yq '.BranchName'
+          cmd: echo "${{ github.event.issue.body }}" | yq '.BranchName'
