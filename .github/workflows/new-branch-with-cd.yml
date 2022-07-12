@@ -5,16 +5,7 @@ name: Setup CD for new Branch
 
 on: issues
 
-jobs:
-  yq-input:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      yq_input: "${{ github.event.issue.body }} | yq '.BranchName'"
-    steps:
-    - id: step1
-      run: echo "hello world"
-      
+jobs: 
   newIssueCreated:
     runs-on: ubuntu-latest
     steps:
