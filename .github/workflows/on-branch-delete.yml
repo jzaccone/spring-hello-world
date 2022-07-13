@@ -1,0 +1,36 @@
+name: Branch Deleted
+
+on: delete
+
+jobs:
+  onBranchDeleted:    
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    if: github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean up
+        run: |
+          echo "Checking pipline cleanup for branch ${{ github.event.ref }}"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-BLOZ4AX6UZ39
+
+      - name: Check for pipeline existing
+        run: |
+          scripts/doesPipelineExist.sh ${{ github.event.ref }}
+          echo "::set-output name=PIPELINE_EXISTS::$?"
+        id: pipelineexists
+
+      - name: Create Delete Pipeline Issue
+        uses: peter-evans/create-or-update-comment@v2.0.0
+        with:
+          body: |
+            Detected branch deletion: ${{ github.event.ref }}
+            Should we cleanup the CD pipeline?
+            Comment "Yes" to delete
+        if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
