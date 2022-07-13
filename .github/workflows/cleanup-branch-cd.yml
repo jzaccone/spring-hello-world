@@ -16,7 +16,7 @@ jobs:
       - name: Check issue for CD cleanup
         run: |
           echo "found ${{ github.event.comment.body }}"
-          if [[ ${{ github.event.comment.body }} == "yes"]] then
+          if [ ${{ github.event.comment.body }} == "yes" ]; then
             echo "cleaning up CD for ${{ github.event.issue.title }} | cut -c16-"
           else
             echo "doing nothing"
