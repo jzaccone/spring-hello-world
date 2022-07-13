@@ -33,12 +33,16 @@ jobs:
           echo "::set-output name=PIPELINE_EXISTS::$(scripts/doesPipelineExist.sh featureX)"
         id: pipelineexists
 
-      - name: Create Delete Pipeline Issue
-        uses: peter-evans/create-or-update-comment@v2.0.0
+      - name: Generate Issue file
+        run: |
+          echo 'Detected branch deletion: featureX\nShould we cleanup the CD pipeline?\nComment "Yes" to delete"' > issue-input.md
+        if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
+
+      - name: Create Issue From File
+        uses: peter-evans/create-issue-from-file@v4
         with:
-          issue-number: 1
-          body: |
-            Detected branch deletion: featureX 
-            Should we cleanup the CD pipeline?
-            Comment "Yes" to delete
+          title: Cleanup CD for FeatureX
+          content-filepath: ./issue-input.md
+          labels: |
+            cleanup-CD
         if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
