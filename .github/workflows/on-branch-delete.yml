@@ -35,7 +35,7 @@ jobs:
 
       - name: Generate Issue file
         run: |
-          echo 'Detected branch deletion: featureX\nShould we cleanup the CD pipeline?\nComment "Yes" to delete"' > issue-input.md
+          echo 'Detected branch deletion: featureX. Should we cleanup the CD pipeline?. Comment "Yes" to delete"' > issue-input.md
         if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
 
       - name: Create Issue From File

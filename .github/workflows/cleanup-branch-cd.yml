@@ -1,0 +1,52 @@
+name: Cleanup Branch with CD
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  onBranchDeleted:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      id-token: write
+      contents: read
+    steps:
+      - name: Check issue for CD cleanup
+        run: |
+          echo "found ${{ github.event.comment.body }}"
+          if [[ ${{ github.event.comment.body }} == "yes"]] then
+            echo "cleaning up CD for ${{ github.event.issue.title }} | cut -c16-"
+          else
+            echo "doing nothing"
+
+      # - name: Checkout Code
+      #   uses: actions/checkout@v3
+      #   with:
+      #     fetch-depth: 2
+
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-region: us-east-1
+      #     role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-BLOZ4AX6UZ39
+
+      # - name: Check for pipeline existing
+      #   run: |
+      #     echo "::set-output name=PIPELINE_EXISTS::$(scripts/doesPipelineExist.sh featureX)"
+      #   id: pipelineexists
+
+      # - name: Generate Issue file
+      #   run: |
+      #     echo 'Detected branch deletion: featureX. Should we cleanup the CD pipeline?. Comment "Yes" to delete"' > issue-input.md
+      #   if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
+
+      # - name: Create Issue From File
+      #   uses: peter-evans/create-issue-from-file@v4
+      #   with:
+      #     title: Cleanup CD for FeatureX
+      #     content-filepath: ./issue-input.md
+      #     labels: |
+      #       cleanup-CD
+      #   if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
