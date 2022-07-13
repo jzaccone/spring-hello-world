@@ -8,6 +8,9 @@ on: issues
 jobs:
   newIssueCreated:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Save branch name to file
         run: echo "${{ github.event.issue.body }}" > input.yaml
