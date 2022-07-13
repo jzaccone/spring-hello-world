@@ -17,21 +17,27 @@ jobs:
         run: |
           echo "found ${{ github.event.comment.body }}"
           if [ ${{ github.event.comment.body }} == "yes" ]; then
-            echo "cleaning up CD for $(echo ${{ github.event.issue.title }} | cut -c16-)"
+            BRANCH_NAME=$(echo ${{ github.event.issue.title }} | cut -c16-)
+            echo "cleaning up CD for $BRANCH_NAME"
+            echo "::set-output name=BRANCH_NAME::$BRANCH_NAME"
           else
             echo "doing nothing"
+            echo "::set-output name=BRANCH_NAME::0"
           fi
+        id: branchname
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-BLOZ4AX6UZ39
+        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
 
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
+        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
 
       - name: Add delete started comment
         uses: peter-evans/create-or-update-comment@v2.0.0
@@ -39,10 +45,12 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             Pipeline stack delete initiated. Waiting for deletion...
+        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
 
       - name: Cleanup Gitops Pipeline
         run: |
-          scripts/cleanup-cd-pipelines.sh
+          scripts/cleanup-cd-pipelines.sh ${{ steps.pipelineexists.outputs.BRANCH_NAME }}
+        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
 
       - name: Add delete completed comment
         uses: peter-evans/create-or-update-comment@v2.0.0
@@ -56,13 +64,4 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           comment: Auto-closing issue
-
-      # - name: Check for pipeline existing
-      #   run: |
-      #     echo "::set-output name=PIPELINE_EXISTS::$(scripts/doesPipelineExist.sh featureX)"
-      #   id: pipelineexists
-
-      # - name: Generate Issue file
-      #   run: |
-      #     echo 'Detected branch deletion: featureX. Should we cleanup the CD pipeline?. Comment "Yes" to delete"' > issue-input.md
-      #   if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
+        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
