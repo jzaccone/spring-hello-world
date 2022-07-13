@@ -31,13 +31,13 @@ jobs:
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-BLOZ4AX6UZ39
-        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
+        if: ${{ steps.branchname.outputs.BRANCH_NAME }} != 0
 
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
-        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
+        if: ${{ steps.branchname.outputs.BRANCH_NAME }} != 0
 
       - name: Add delete started comment
         uses: peter-evans/create-or-update-comment@v2.0.0
@@ -45,12 +45,12 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             Pipeline stack delete initiated. Waiting for deletion...
-        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
+        if: ${{ steps.branchname.outputs.BRANCH_NAME }} != 0
 
       - name: Cleanup Gitops Pipeline
         run: |
-          scripts/cleanup-cd-pipelines.sh ${{ steps.pipelineexists.outputs.BRANCH_NAME }}
-        if: ${{ steps.pipelineexists.outputs.BRANCH_NAME }} != 0
+          scripts/cleanup-cd-pipelines.sh ${{ steps.branchname.outputs.BRANCH_NAME }}
+        if: ${{ steps.branchname.outputs.BRANCH_NAME }} != 0
 
       - name: Add delete completed comment
         uses: peter-evans/create-or-update-comment@v2.0.0
