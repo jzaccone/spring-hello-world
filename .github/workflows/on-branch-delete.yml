@@ -30,8 +30,7 @@ jobs:
 
       - name: Check for pipeline existing
         run: |
-          scripts/doesPipelineExist.sh featureX
-          echo "::set-output name=PIPELINE_EXISTS::$?"
+          echo "::set-output name=PIPELINE_EXISTS::$(scripts/doesPipelineExist.sh featureX)"
         id: pipelineexists
 
       - name: Create Delete Pipeline Issue
