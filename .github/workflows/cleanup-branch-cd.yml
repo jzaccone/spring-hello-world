@@ -20,6 +20,7 @@ jobs:
             echo "cleaning up CD for ${{ github.event.issue.title }} | cut -c16-"
           else
             echo "doing nothing"
+          fi
 
       # - name: Checkout Code
       #   uses: actions/checkout@v3
