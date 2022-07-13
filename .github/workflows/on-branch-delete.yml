@@ -36,6 +36,7 @@ jobs:
       - name: Create Delete Pipeline Issue
         uses: peter-evans/create-or-update-comment@v2.0.0
         with:
+          issue-number: 1
           body: |
             Detected branch deletion: featureX 
             Should we cleanup the CD pipeline?
