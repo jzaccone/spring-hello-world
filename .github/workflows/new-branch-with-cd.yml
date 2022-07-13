@@ -40,7 +40,7 @@ jobs:
 
       - name: Create pipeline
         run: |
-          cf create-stack --stack-name spring-boot-pipeline-${{ steps.getbranch.outputs.result }} --template-body file:///Users/johnzaccone/uzurv-code/springdemo/cloudformation/pipeline.yaml  --capabilities CAPABILITY_NAMED_IAM --parameters '[{"ParameterKey": "BranchName", "ParameterValue": "${{ steps.getbranch.outputs.result }}"},{"ParameterKey": "EnvName", "ParameterValue": "${{ steps.getbranch.outputs.result }}"}]'
+          aws cloudformation create-stack --stack-name spring-boot-pipeline-${{ steps.getbranch.outputs.result }} --template-body file:///Users/johnzaccone/uzurv-code/springdemo/cloudformation/pipeline.yaml  --capabilities CAPABILITY_NAMED_IAM --parameters '[{"ParameterKey": "BranchName", "ParameterValue": "${{ steps.getbranch.outputs.result }}"},{"ParameterKey": "EnvName", "ParameterValue": "${{ steps.getbranch.outputs.result }}"}]'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
