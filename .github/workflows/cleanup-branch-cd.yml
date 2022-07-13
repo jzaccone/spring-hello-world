@@ -22,16 +22,35 @@ jobs:
             echo "doing nothing"
           fi
 
-      # - name: Checkout Code
-      #   uses: actions/checkout@v3
-      #   with:
-      #     fetch-depth: 2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-BLOZ4AX6UZ39
 
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-region: us-east-1
-      #     role-to-assume: arn:aws:iam::384408301901:role/gitops-odic-source-Role-BLOZ4AX6UZ39
+      - name: Add delete started comment
+        uses: peter-evans/create-or-update-comment@v2.0.0
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Pipeline stack delete initiated. Waiting for deletion...
+
+      - name: Cleanup Gitops Pipeline
+        run: |
+          scripts/cleanup-cd-pipelines.sh
+
+      - name: Add delete completed comment
+        uses: peter-evans/create-or-update-comment@v2.0.0
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Pipeline stack successfully cleaned up
+
+      - name: Close Issue
+        uses: peter-evans/close-issue@v2.0.0
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment: Auto-closing issue
 
       # - name: Check for pipeline existing
       #   run: |
@@ -41,13 +60,4 @@ jobs:
       # - name: Generate Issue file
       #   run: |
       #     echo 'Detected branch deletion: featureX. Should we cleanup the CD pipeline?. Comment "Yes" to delete"' > issue-input.md
-      #   if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
-
-      # - name: Create Issue From File
-      #   uses: peter-evans/create-issue-from-file@v4
-      #   with:
-      #     title: Cleanup CD for FeatureX
-      #     content-filepath: ./issue-input.md
-      #     labels: |
-      #       cleanup-CD
       #   if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
