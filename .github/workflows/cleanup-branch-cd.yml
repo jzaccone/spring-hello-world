@@ -49,7 +49,7 @@ jobs:
 
       - name: Cleanup Gitops Pipeline
         run: |
-          scripts/cleanup-cd-pipelines.sh featureX #${{ steps.branchname.outputs.BRANCH_NAME }}
+          scripts/cleanup-cd-pipelines.sh ${{ steps.branchname.outputs.BRANCH_NAME }}
         if: ${{ steps.branchname.outputs.BRANCH_NAME }} != 0
 
       - name: Add delete completed comment
