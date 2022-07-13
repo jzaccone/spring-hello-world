@@ -1,18 +1,19 @@
 name: Branch Deleted
 
-on: delete
+on:
+  delete:
+  workflow_dispatch:
 
 jobs:
-  onBranchDeleted:    
+  onBranchDeleted:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-    if: github.event.ref_type == 'branch'
-    runs-on: ubuntu-latest
+    # if: github.event.ref_type == 'branch'
     steps:
-      - name: Clean up
-        run: |
-          echo "Checking pipline cleanup for branch ${{ github.event.ref }}"
+      # - name: Clean up
+      #   run: |
+      #     echo "Checking pipline cleanup for branch ${{ github.event.ref }}"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -22,7 +23,7 @@ jobs:
 
       - name: Check for pipeline existing
         run: |
-          scripts/doesPipelineExist.sh ${{ github.event.ref }}
+          scripts/doesPipelineExist.sh ${{ featureX }}
           echo "::set-output name=PIPELINE_EXISTS::$?"
         id: pipelineexists
 
@@ -30,7 +31,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2.0.0
         with:
           body: |
-            Detected branch deletion: ${{ github.event.ref }}
+            Detected branch deletion: ${{ featureX }}
             Should we cleanup the CD pipeline?
             Comment "Yes" to delete
         if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
