@@ -3,8 +3,9 @@
 
 name: Setup CD for new Branch
 
-on: issues
-  types: [created]
+on: 
+  issues:
+    types: [created]
 
 jobs:
   newIssueCreated:
