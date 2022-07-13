@@ -23,7 +23,7 @@ jobs:
 
       - name: Check for pipeline existing
         run: |
-          scripts/doesPipelineExist.sh ${{ featureX }}
+          scripts/doesPipelineExist.sh featureX
           echo "::set-output name=PIPELINE_EXISTS::$?"
         id: pipelineexists
 
@@ -31,7 +31,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2.0.0
         with:
           body: |
-            Detected branch deletion: ${{ featureX }}
+            Detected branch deletion: featureX 
             Should we cleanup the CD pipeline?
             Comment "Yes" to delete
         if: ${{ steps.pipelineexists.outputs.PIPELINE_EXISTS }} == 1
