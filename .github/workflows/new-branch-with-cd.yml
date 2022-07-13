@@ -54,7 +54,7 @@ jobs:
             New CF stack for pipeline created: spring-boot-pipeline-${{ steps.getbranch.outputs.result }}
 
       - name: Close Issue
-      uses: peter-evans/close-issue@v2.0.0
+        uses: peter-evans/close-issue@v2.0.0
         with:
           issue-number: ${{ github.event.issue.id }}
           comment: Auto-closing issue
