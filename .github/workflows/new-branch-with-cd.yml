@@ -11,6 +11,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      issue: write
     steps:
       - name: Save branch name to file
         run: echo "${{ github.event.issue.body }}" > input.yaml
