@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      id-token: write
+      contents: read
     # if: github.event.ref_type == 'branch'
     steps:
       # - name: Clean up
